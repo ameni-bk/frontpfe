@@ -1,15 +1,45 @@
 import "./navbar.css";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { AiOutlineMenu, AiOutlineExpand } from "react-icons/ai";
 import { BsMoonStars, BsFillPersonFill } from "react-icons/bs";
 import { HiOutlineTicket } from "react-icons/hi";
 import { MainContext } from "../../hooks/context/MainContext";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Cookies from "universal-cookie";
 
 const Navbar = () => {
+  const cookies = new Cookies();
+  const navigate = useNavigate();
+  let user = cookies.get("user");
   const { sidebarOpen, setSidebarOpen } = useContext(MainContext);
+
+  const [toggleMenu, setToggleMenu] = useState(false);
+
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setToggleMenu(false);
+      }
+    }
+
+    // Bind the event listener
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Unbind the event listener on cleanup
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [menuRef]);
+
+  const Logout = async () => {
+    cookies.remove("user");
+    window.location.reload();
+  };
+
   return (
-    <div className="fixed navbar z-20 h-14 w-screen flex flex-row items-center justify-between border px-4 py-2 bg-white shadow-md">
+    <div className=" fixed navbar z-20 h-14 w-screen flex flex-row items-center justify-between  px-4  bg-white shadow-md">
       <div className="n-left w-1/4 flex flex-row items-center justify-between px-10 ">
         <div
           className="n-menuIcon cursor-pointer "
@@ -21,16 +51,16 @@ const Navbar = () => {
           <p>LOGO</p>
         </div>
       </div>
-      <Link
-        to="/ADDticket"
-        className="text-white outline-none  bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-2 py-1.5 "
+      <button
+        type="button"
+        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-md text-sm px-2 py-1.5 "
       >
         <div className="flex flex-row items-center gap-1 text-lg">
           <HiOutlineTicket size={24} /> Create Ticket
         </div>
-      </Link>
+      </button>
 
-      <div className="n-right w-1/2 flex flex-row items-center justify-between pr-2 ">
+      <div className="n-right w-1/2 flex flex-row items-center justify-between pr-2 h-full  ">
         <div className="n-input ">
           <form>
             <label
@@ -73,17 +103,50 @@ const Navbar = () => {
             </div>
           </form>
         </div>
-        <div className="n-icons w-2/5 flex flex-row items-center justify-between ">
+        <div
+          className="n-icons relative w-2/5 flex flex-row items-center justify-between h-full "
+          ref={menuRef}
+        >
           <BsMoonStars size={24} color="#707070" />
           <AiOutlineExpand size={24} color="#707070" />
-          <div className="n-auth flex flex-row gap-2 items-center">
+          <div
+            className="n-auth h-full px-1 flex flex-row gap-2 items-center hover:bg-gray-100 cursor-pointer "
+            onClick={() => setToggleMenu(!toggleMenu)}
+          >
             <div className="n-auth-icon p-1 rounded-full bg-blue-700  ">
               <BsFillPersonFill size={24} color="#fff" />
             </div>
             <span>
-              <b>Ameni Ben Khalifa</b>
+              {!user ? null :
+                <b>{user.username}</b>
+              }
+              {/* <b>Ameni Ben Khalifa</b> */}
             </span>
           </div>
+          {!toggleMenu ? null : (
+            <div className="scale-up-ver-top shadow-md flex flex-col items-center gap-2 px-1 py-2 font-medium rounded-md z-30 absolute top-12 right-5 bg-white border ">
+              <Link
+                to="profile"
+                className="w-full px-3 py-1 text-center hover:bg-blue-700 hover:text-white rounded-md"
+              >
+                My Profile
+              </Link>
+              {/* <Link
+                to="#"
+                className="w-full px-3 py-1 text-center hover:bg-blue-700 hover:text-white rounded-md"
+              >
+                Settings
+          </Link> */}
+              <div className="w-11/12 border " />
+              <button
+                type="button"
+                onClick={() => Logout()}
+                className="w-full px-3 py-1 text-center hover:bg-blue-700 hover:text-white rounded-md"
+              >
+                LOGOUT
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

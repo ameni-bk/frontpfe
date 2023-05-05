@@ -1,13 +1,10 @@
 import "./sidebar.css";
 import React, { useContext, useState } from "react";
-import { TbHomeStats } from "react-icons/tb";
-import { FiUsers } from "react-icons/fi";
+import { RiUserSettingsLine } from "react-icons/ri";
 import { HiOutlineTicket } from "react-icons/hi";
-import { RiShieldUserLine } from "react-icons/ri";
-import { BsFileEarmarkMedical } from "react-icons/bs";
-import { TbClockHour2 } from "react-icons/tb";
-import { TbTrash } from "react-icons/tb";
-import { TfiHeadphoneAlt } from "react-icons/tfi";
+import { TbFileDollar,TbHomeStats,TbTrash,TbCalendarTime } from "react-icons/tb";
+import { BsTicketDetailed } from "react-icons/bs";
+import { MdOutlineContactSupport } from "react-icons/md";
 import { IoIosArrowForward, IoIosArrowDown } from "react-icons/io";
 import { MainContext } from "../../hooks/context/MainContext";
 import { Link } from "react-router-dom";
@@ -30,15 +27,19 @@ const Sidebar = () => {
           </span>
         </div>
       </Link>
-
       <Link to="/tickets">
         <div
           className="
       s-dash flex flex-row items-center text-lg gap-2 py-2 px-4  hover:bg-blue-700 hover:text-white transition-all duration-300 ease-in-out rounded-md cursor-pointer
       "
-      onClick={()=> setSubMenuTicketG(!subMenuTicketG)}
+      onClick={()=> {
+          setSubMenuTicketG(!subMenuTicketG)
+          if (subMenuTicketS) {
+            setSubMenuTicketS(false)
+          }
+        }}
         >
-          <HiOutlineTicket size={24} />
+          <BsTicketDetailed size={24} />
           <span className={`font-semibold ${sidebarOpen ? "" : "hidden"}`}>
             Global Tickets
           </span>
@@ -77,14 +78,18 @@ const Sidebar = () => {
         </Link>
       </div>
       }
-
-
  <Link to="/self_tickets">
         <div
           className="
       s-dash flex flex-row items-center text-lg gap-2 py-2 px-4  hover:bg-blue-700 hover:text-white transition-all duration-300 ease-in-out rounded-md cursor-pointer
       "
-      onClick={()=> setSubMenuTicketS(!subMenuTicketS)}
+      onClick={()=> {
+        setSubMenuTicketS(!subMenuTicketS)
+        if(setSubMenuTicketG) {
+          setSubMenuTicketG(false)
+
+        }
+      }}
         >
           <HiOutlineTicket size={24} />
           <span className={`font-semibold ${sidebarOpen ? "" : "hidden"}`}>
@@ -125,15 +130,13 @@ const Sidebar = () => {
         </Link>
       </div>
       }
-
-
       <Link to="/client">
         <div
           className="
       s-dash flex flex-row items-center text-lg gap-2 py-2 px-4  hover:bg-blue-700 hover:text-white transition-all duration-300 ease-in-out rounded-md cursor-pointer
       "
         >
-          <FiUsers size={24} />
+          <RiUserSettingsLine size={24} />
           <span className={`font-semibold ${sidebarOpen ? "" : "hidden"}`}>
             Manage clients
           </span>
@@ -146,26 +149,24 @@ const Sidebar = () => {
       s-dash flex flex-row items-center text-lg gap-2 py-2 px-4  hover:bg-blue-700 hover:text-white transition-all duration-300 ease-in-out rounded-md cursor-pointer
       "
         >
-          <RiShieldUserLine size={24} />
+          <RiUserSettingsLine size={24} />
           <span className={`font-semibold ${sidebarOpen ? "" : "hidden"}`}>
             Manage Agents
           </span>
         </div>
       </Link>
-
       <Link to="/bills">
         <div
           className="
       s-dash flex flex-row items-center text-lg gap-2 py-2 px-4  hover:bg-blue-700 hover:text-white transition-all duration-300 ease-in-out rounded-md cursor-pointer
       "
         >
-          <BsFileEarmarkMedical size={24} />
+          <TbFileDollar size={24} />
           <span className={`font-semibold ${sidebarOpen ? "" : "hidden"}`}>
             Bills
           </span>
         </div>
       </Link>
-
       <Link to="/trashed">
         <div
           className="
@@ -185,20 +186,19 @@ const Sidebar = () => {
       s-dash flex flex-row items-center text-lg gap-2 py-2 px-4  hover:bg-blue-700 hover:text-white transition-all duration-300 ease-in-out rounded-md cursor-pointer
       "
         >
-          <TbClockHour2 size={24} />
+          <TbCalendarTime size={24} />
           <span className={`font-semibold ${sidebarOpen ? "" : "hidden"}`}>
             Business hour
           </span>
         </div>
       </Link>
-
-      <Link to="/contact">
+      <Link to="/contact1">
         <div
           className="
       s-dash flex flex-row items-center text-lg gap-2 py-2 px-4  hover:bg-blue-700 hover:text-white transition-all duration-300 ease-in-out rounded-md cursor-pointer
       "
         >
-          <TfiHeadphoneAlt size={24} />
+          <MdOutlineContactSupport size={24} />
           <span className={`font-semibold ${sidebarOpen ? "" : "hidden"}`}>
             Contact support
           </span>
@@ -207,5 +207,4 @@ const Sidebar = () => {
     </div>
   );
 };
-
 export default Sidebar;
